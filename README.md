@@ -87,4 +87,4 @@ Useful python libraries used:
 
 ## Licence
 
-MIT licensed. See the bundled LICENSE file for more details.
+MIT licensed. See the bundled [LICENSE](https://github.com/federicodeservi/mtsb-analyzer/blob/master/LICENSE "LICENSE title") file for more details. 
