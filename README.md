@@ -12,17 +12,17 @@ MTSB (Movie Tweet Sentiment Boxoffice) Analyzer is a python module that collects
 
 ## Requirements
 
-⋅⋅* Python >= 3.5 (Might work on older version but it has not been tested)
-⋅⋅* All module dependencies are installed on installation, but you will also need:
-    ⋅⋅* You need to have set up correctly ntlk module: https://www.nltk.org/install.html
-    ⋅⋅* Performed at least once "ntlk.download()"
-    ⋅⋅* Already have API keys for tweet collection: https://developer.twitter.com/en.html
-    ⋅⋅* Already have API keys for Google Natural Language: https://cloud.google.com/natural-language/docs/setup
-⋅⋅* You also need to have the following services installed (tested on Linux system)
-    ⋅⋅* Jupyter-lab
-    ⋅⋅* MongoDB
-    ⋅⋅* Nifi
-    ⋅⋅* Kafka
+* Python >= 3.5 (Might work on older version but it has not been tested)
+* All module dependencies are installed on installation, but you will also need:
+    * You need to have set up correctly ntlk module: https://www.nltk.org/install.html
+    * Performed at least once "ntlk.download()"
+    * Already have API keys for tweet collection: https://developer.twitter.com/en.html
+    * Already have API keys for Google Natural Language: https://cloud.google.com/natural-language/docs/setup
+* You also need to have the following services installed (tested on Linux system)
+    * Jupyter-lab
+    * MongoDB
+    * Nifi
+    * Kafka
     
 ## Installation
 
@@ -34,16 +34,17 @@ pip install mtsb-analyzer
 
 ## Docs
 
-⋅⋅* tweet_collector()
+* tweet_collector()
 
 Collect tweets about movies. It lets you choose between movies released in 2019 and releasing in 2020. It then creates a list of hashtags based on the movie's name and top actors and uses it to collect tweets from twitter.
 
 ```
 import mtsb-analyzer
+
 mtsb-analyzer.tweet_collector()
 ```
 
-⋅⋅* sentiment()
+* sentiment()
 
 Performs sentiment analysis on collected tweets using Google's API and returns a weighted geometric average of score and magnitude.
 
@@ -52,18 +53,20 @@ import mtsb-analyzer
 mtsb-analyzer.sentiment()
 ```
 
-⋅⋅* sentiment_boxoffice_all()
+* sentiment_boxoffice_all()
 
 Creates a dataframe with the following info for each movie:
-    ⋅⋅* Movie title
-    ⋅⋅* Weighted geometric average of score and magnitude (from sentiment() )
-    ⋅⋅* Gross boxoffice for the week after the movie release
+    * Movie title
+    * Weighted geometric average of score and magnitude (from sentiment() )
+    * Gross boxoffice for the week after the movie release
 
 ```
 import mtsb-analyzer
+
 mtsb-analyzer.sentiment_boxoffice_all()
 ```
-⋅⋅* spearman_corr(df)
+
+* spearman_corr(df)
 
 Performs a spearman correlation using the df returned by sentiment_boxoffice_all().
 
@@ -73,14 +76,14 @@ mtsb-analyzer.spearman_corr(df)
 
 ## Project Links
 
-⋅⋅* PyPI: 
+* PyPI: 
 
 ## Acknowledgements
 
 Useful python libraries used:
-⋅⋅* imdbpy library
-⋅⋅* ntlk
-⋅⋅* beautifulSoup
+* imdbpy library
+* ntlk
+* beautifulSoup
 
 ## Licence
 
