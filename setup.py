@@ -10,7 +10,7 @@ REQUIREMENTS = ['numpy', 'pandas', 'beautifulsoup4', 'imdbpy', 'lxml', 'tweepy',
 
 setuptools.setup(
     author="Federico De Servi, Alessandro Pontini",
-    author_email="federico@federicodeservi.com",
+    author_email="federico@federicodeservi.com, a.pontini1@campus.unimib.it",
     name='mtsb-analyzer',
     license="MIT",
     description='Python library that collects tweets about movies, performs a sentiment analysis and correlates it with the boxoffice result of the week after the movie release.',
