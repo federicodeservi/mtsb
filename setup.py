@@ -21,9 +21,8 @@ setuptools.setup(
     python_requires=">=3.5",
     install_requires= REQUIREMENTS,
     classifiers=[
-        # Trove classifiers
-        # (https://pypi.python.org/pypi?%3Aaction=list_classifiers)
         'Development Status :: 4 - Beta',
+        'Natural Language :: English',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
