@@ -4,11 +4,11 @@ MTSB (Movie Tweet Sentiment Boxoffice) Analyzer is a python module that collects
 
 ## Features
 
-⋅⋅* Collect tweets about movies
-⋅⋅* Creates hashtags for each movie
-⋅⋅* Performs sentiment analysis on those tweets using Google's API and returns a weighted geometric average of score and magnitude
-⋅⋅* Gets boxoffice data from boxofficemojo
-⋅⋅* Performs correlation between the sentiment analysis and boxoffice data
+* Collect tweets about movies
+* Creates hashtags for each movie
+* Performs sentiment analysis on those tweets using Google's API and returns a weighted geometric average of score and magnitude
+* Gets boxoffice data from boxofficemojo
+* Performs correlation between the sentiment analysis and boxoffice data
 
 ## Requirements
 
