@@ -81,9 +81,9 @@ mtsb-analyzer.spearman_corr(df)
 ## Acknowledgements
 
 Useful python libraries used:
-* imdbpy library
-* ntlk
-* beautifulSoup
+* [imdbpy library](https://github.com/alberanid/imdbpy/ "imdbpy library title")
+* [ntlk library](https://github.com/nltk/nltk "ntlk library title")
+* [beautifulSoup library](https://pypi.org/project/beautifulsoup4/ "beautifulSoup library title")
 
 ## Licence
 
