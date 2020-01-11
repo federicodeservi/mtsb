@@ -1,6 +1,6 @@
-# Mtsb-analyzer
+# MTSB
 
-MTSB (Movie Tweet Sentiment Boxoffice) Analyzer is a python module that collects tweets about movies, performs a sentiment analysis and correlates it with the boxoffice result of the week after the movie release.
+MTSB (Movie Tweet Sentiment Boxoffice) is a python module that collects tweets about movies, performs a sentiment analysis and correlates it with the boxoffice result of the week after the movie release.
 
 ## Features
 
@@ -26,10 +26,10 @@ MTSB (Movie Tweet Sentiment Boxoffice) Analyzer is a python module that collects
     
 ## Installation
 
-In order to install MTSB-Analyzer you can simply:
+In order to install MTSB you can simply:
 
 ```
-pip install mtsb-analyzer
+pip install mtsb
 ```
 
 ## Docs
@@ -39,9 +39,9 @@ pip install mtsb-analyzer
 Collect tweets about movies. It lets you choose between movies released in 2019 and releasing in 2020. It then creates a list of hashtags based on the movie's name and top actors and uses it to collect tweets from twitter.
 
 ```
-import mtsb-analyzer
+import mtsb
 
-mtsb-analyzer.tweet_collector()
+mtsb.tweet_collector()
 ```
 
 * sentiment()
@@ -49,8 +49,8 @@ mtsb-analyzer.tweet_collector()
 Performs sentiment analysis on collected tweets using Google's API and returns a weighted geometric average of score and magnitude.
 
 ```
-import mtsb-analyzer
-mtsb-analyzer.sentiment()
+import mtsb
+mtsb.sentiment()
 ```
 
 * sentiment_boxoffice_all()
@@ -61,9 +61,9 @@ Creates a dataframe with the following info for each movie:
     * Gross boxoffice for the week after the movie release
 
 ```
-import mtsb-analyzer
+import mtsb
 
-mtsb-analyzer.sentiment_boxoffice_all()
+mtsb.sentiment_boxoffice_all()
 ```
 
 * spearman_corr(df)
@@ -71,12 +71,8 @@ mtsb-analyzer.sentiment_boxoffice_all()
 Performs a spearman correlation using the df returned by sentiment_boxoffice_all().
 
 ```
-mtsb-analyzer.spearman_corr(df)
+mtsb.spearman_corr(df)
 ```
-
-## Project Links
-
-* PyPI: 
 
 ## Acknowledgements
 
