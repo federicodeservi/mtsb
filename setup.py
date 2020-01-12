@@ -6,7 +6,7 @@ with open('README.md') as f:
 
 REQUIREMENTS = ['numpy', 'pandas', 'beautifulsoup4', 'imdbpy', 'lxml', 'tweepy', 'kafka',
                 'pymongo', 'pprint', 'contractions', 'inflect', 'ntlk', 'google-cloud-language',
-                'html5lib']
+                'html5lib', 'mime']
 
 setuptools.setup(
     author="Federico De Servi, Alessandro Pontini",
