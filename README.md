@@ -18,8 +18,7 @@ MTSB (Movie Tweet Sentiment Boxoffice) is a python module that collects tweets a
     * You need to have set up correctly ntlk module: https://www.nltk.org/install.html
     * Performed at least once "ntlk.download()"
     * Already have API keys for tweet collection: https://developer.twitter.com/en.html
-    * If you plan on using Google's API:
-          * Already have API keys for Google Natural Language: https://cloud.google.com/natural-language/docs/setup
+    * If you plan on using Google's API you lready need to have API keys for Google Natural Language service: https://cloud.google.com/natural-language/docs/setup
 * You also need to have the following services installed (tested on Linux system)
     * Jupyter-lab
     * MongoDB
