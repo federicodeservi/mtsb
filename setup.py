@@ -14,7 +14,7 @@ setuptools.setup(
     name='mtsb-analyzer',
     license="MIT",
     description='Python library that collects tweets about movies, performs a sentiment analysis and correlates it with the boxoffice result of the week after the movie release.',
-    version='v0.0.1',
+    version='v0.0.2',
     long_description=README,
     url='https://github.com/federicodeservi/mtsb-analyzer',
     packages=setuptools.find_packages(),
