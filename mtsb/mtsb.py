@@ -520,6 +520,36 @@ def clean_tweet_auto(dataframe):
     print('\nAll tweets are clean')
     return array_text
 
+
+def which_sentiment():
+    exit = 0
+    while exit != 1:
+        while True:
+            print("You can use Textblob sentiment analyzer or Google NLU service. Which one do you prefer?")
+            sentiment_selected = str(input('[textblob/google]:  '))
+            if sentiment_selected not in ("textblob", "google"):
+                print("Sorry, you must select one of the two services.")
+                continue
+            else:
+                break
+        while True:
+            print("You selected: "+sentiment_selected+". Is that correct?")
+            yes_no = input('[y/n]:  ')
+            if (yes_no == "y") or (yes_no == "n"):
+                break
+            else:
+                print("Sorry, you did not enter y or n.")
+                continue
+        while True:
+            if yes_no == "n":
+                is_looping = False
+                break
+            else:
+                sentiment_type = sentiment_selected
+                exit = 1
+                break
+    return sentiment_type
+
 def sentiment_textblob(array):
         text = TextBlob(array)
         return [text.sentiment.polarity, text.sentiment.subjectivity]
@@ -669,13 +699,18 @@ def tweet_collector():
 
 
 def sentiment():
-    #Returns the mean of the score for the selected collection
+    #Asks the user which sentiment service wants to use
+    sentiment_type = which_sentiment()
+    #Returns the weighted geometric mean of the score*magnitude for the selected collection
     tweet_df = get_database_coll()
     tweets_array = clean_tweet_auto(tweet_df)
-    sentiment_df = google_analyze_tweet(tweets_array)
-    mean_google = sentiment_df.score_Google.mean()
-    mean_textblob = sentiment_df.score_TextBlob.mean()
-    return mean_google, mean_textblob
+    if sentiment_type == "textblob":
+        sentiment_df = sentiment_textblob(tweets_array)
+        mean_sentiment = sentiment_df.score_TextBlob.mean()
+    else:
+        sentiment_df = google_analyze_tweet(tweets_array)
+        mean_sentiment = sentiment_df.score_Google.mean()
+    return mean_sentiment
 
 
 def sentiment_boxoffice_all():
