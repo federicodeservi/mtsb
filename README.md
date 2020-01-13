@@ -13,7 +13,7 @@ MTSB (Movie Tweet Sentiment Boxoffice) is a python module that collects tweets a
 ## Requirements
 
 * Python >= 3.5 (Might work on older versions but it has not been tested)
-* Windows users must use a 32bit package. That's the only supported architecture for now from ntlk. (Might change in the future)
+* The package has only been tested on Linux, with the following docker compose environment: https://gitlab.com/aletundo/data-management-lab
 * All module dependencies are installed on installation, but you will also need:
     * You need to have set up correctly ntlk module: https://www.nltk.org/install.html
     * Performed at least once "ntlk.download()"
@@ -51,6 +51,7 @@ Performs sentiment analysis on collected tweets using Google's API or Textblob a
 
 ```
 import mtsb
+
 mtsb.sentiment()
 ```
 
