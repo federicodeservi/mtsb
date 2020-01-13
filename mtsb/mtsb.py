@@ -1,3 +1,5 @@
+from email.mime.text import MIMEText as text
+import smtplib
 import numpy as np
 from bs4 import BeautifulSoup as soup  # HTML data structure
 from urllib.request import urlopen as uReq  # Web client
@@ -7,7 +9,7 @@ import imdb
 import pandas as pd
 from datetime import datetime
 from lxml import etree
-import threading
+import multiprocessing
 import tweepy
 from tweepy import OAuthHandler
 from kafka import KafkaProducer
@@ -320,8 +322,56 @@ def ask_time():
     timeout_mins = timeout_input
     timeout = timeout_mins*60
     return timeout
-        
-def starter(timeout, keys, mytopic, query):
+
+def get_email():
+    while True:
+        print("Do you wanna receive an email when the collection completes?")
+        yes_no = str(input('[y/n]:  '))
+        if (yes_no == "y") or (yes_no == "n"):
+            break
+        else:
+            print("Sorry, you did not enter y or n.")
+            continue
+    if yes_no == "n":
+        exit=1
+        email = 0
+    else:
+        exit=0
+    while exit != 1:
+        while True:
+            email_entered = str(input("Please type in your email: "))
+            print("You entered: "+email_entered+". Is that correct?")
+            yes_no_mail = input('[y/n]:  ')
+            if (yes_no_mail == "y") or (yes_no_mail == "n"):
+                break
+            else:
+                print("Sorry, you did not enter y or n.")
+                continue
+        while True:
+            if yes_no_mail == "n":
+                is_looping = False
+                print("c")
+                break
+            else:
+                email = email_entered
+                exit = 1
+                break
+    return email
+
+def send_email_finish(email):
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server.login("errorfound201981@gmail.com", "DataMan2019!")
+    m = text("The tweet collector have finished,\nNow you can check on Mongodb typing: \nlocalhost:8081 on your local browser.")
+    m['Subject'] = '***TWEET COLLECTION FINISHED***'
+    m['From'] = "errorfound201981@gmail.com"
+    m['To'] = email
+    server.sendmail(
+        "errorfound201981@gmail.com",
+        email,
+        m.as_string())
+    server.quit()
+
+def starter(timeout, keys, mytopic, query, email):
         stop_process = False
         streamf = multiprocessing.Process(target = stream, args =(lambda : stop_threads, keys, mytopic, query))
         streamf.daemon = True
@@ -329,6 +379,8 @@ def starter(timeout, keys, mytopic, query):
         time.sleep(timeout)
         stop_process = True
         streamf.terminate()
+        if email!=0:
+            send_email_finish(email)
         streamf.join()
         print('Process killed')
         print("Is stream alive?")
@@ -469,6 +521,39 @@ def clean_tweet_auto(dataframe):
     return array_text
 
 
+def which_sentiment():
+    exit = 0
+    while exit != 1:
+        while True:
+            print("You can use Textblob sentiment analyzer or Google NLU service. Which one do you prefer?")
+            sentiment_selected = str(input('[textblob/google]:  '))
+            if sentiment_selected not in ("textblob", "google"):
+                print("Sorry, you must select one of the two services.")
+                continue
+            else:
+                break
+        while True:
+            print("You selected: "+sentiment_selected+". Is that correct?")
+            yes_no = input('[y/n]:  ')
+            if (yes_no == "y") or (yes_no == "n"):
+                break
+            else:
+                print("Sorry, you did not enter y or n.")
+                continue
+        while True:
+            if yes_no == "n":
+                is_looping = False
+                break
+            else:
+                sentiment_type = sentiment_selected
+                exit = 1
+                break
+    return sentiment_type
+
+def sentiment_textblob(array):
+        text = TextBlob(array)
+        return [text.sentiment.polarity, text.sentiment.subjectivity]
+
 def google_analyze_tweet(array):
     print('There are',len(array),'tweets in your database\n')
     df_result = pd.DataFrame()
@@ -600,6 +685,7 @@ def tweet_collector():
             continue
     timeout = ask_time()
     keys =  key()
+    email = get_email()
     print("Are you ready to start tweets' collection?")
     while True:
         print("Type [y] when you're ready: ")
@@ -609,20 +695,22 @@ def tweet_collector():
         else:
             print("Sorry, you did not enter y.")
             continue
-    starter(timeout, keys, mytopic, query)
+    starter(timeout, keys, mytopic, query, email)
 
 
 def sentiment():
+    #Asks the user which sentiment service wants to use
+    sentiment_type = which_sentiment()
     #Returns the weighted geometric mean of the score*magnitude for the selected collection
     tweet_df = get_database_coll()
     tweets_array = clean_tweet_auto(tweet_df)
-    sentiment_df = google_analyze_tweet(tweets_array)
-    #Calculates score^magnitude
-    sentiment_df["score_pow_magnitude"] = sentiment_df["score"].pow(sentiment_df["magnitude"])
-    weight_sum = sentiment_df["magnitude"].sum()
-    score_magnitude_sum = sentiment_df["score_pow_magnitude"].sum()
-    weighted_avg = score_magnitude_sum**(1/weight_sum)
-    return weighted_avg
+    if sentiment_type == "textblob":
+        sentiment_df = sentiment_textblob(tweets_array)
+        mean_sentiment = sentiment_df.score_TextBlob.mean()
+    else:
+        sentiment_df = google_analyze_tweet(tweets_array)
+        mean_sentiment = sentiment_df.score_Google.mean()
+    return mean_sentiment
 
 
 def sentiment_boxoffice_all():
@@ -663,4 +751,3 @@ def sentiment_boxoffice_all():
 def spearman_corr(df):
     corr_matrix = df.corr(method="spearman")
     return corr_matrix
-    

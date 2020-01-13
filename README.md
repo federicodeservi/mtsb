@@ -6,18 +6,19 @@ MTSB (Movie Tweet Sentiment Boxoffice) is a python module that collects tweets a
 
 * Collect tweets about movies
 * Creates hashtags for each movie
-* Performs sentiment analysis on those tweets using Google's API and returns a weighted geometric average of score and magnitude
+* Performs sentiment analysis on those tweets using Google's API or Textblob and returns a mean score
 * Gets boxoffice data from boxofficemojo
 * Performs correlation between the sentiment analysis and boxoffice data
 
 ## Requirements
 
-* Python >= 3.5 (Might work on older version but it has not been tested)
+* Python >= 3.5 (Might work on older versions but it has not been tested)
+* The package has only been tested on Linux, with the following docker compose environment: https://gitlab.com/aletundo/data-management-lab
 * All module dependencies are installed on installation, but you will also need:
     * You need to have set up correctly ntlk module: https://www.nltk.org/install.html
     * Performed at least once "ntlk.download()"
     * Already have API keys for tweet collection: https://developer.twitter.com/en.html
-    * Already have API keys for Google Natural Language: https://cloud.google.com/natural-language/docs/setup
+    * If you plan on using Google's API you lready need to have API keys for Google Natural Language service: https://cloud.google.com/natural-language/docs/setup
 * You also need to have the following services installed (tested on Linux system)
     * Jupyter-lab
     * MongoDB
@@ -46,10 +47,11 @@ mtsb.tweet_collector()
 
 * sentiment()
 
-Performs sentiment analysis on collected tweets using Google's API and returns a weighted geometric average of score and magnitude.
+Performs sentiment analysis on collected tweets using Google's API or Textblob and returns a weighted geometric average of score and magnitude.
 
 ```
 import mtsb
+
 mtsb.sentiment()
 ```
 
@@ -73,6 +75,10 @@ Performs a spearman correlation using the df returned by sentiment_boxoffice_all
 ```
 mtsb.spearman_corr(df)
 ```
+
+## Links
+
+* PyPI: https://pypi.org/project/mtsb/
 
 ## Acknowledgements
 
