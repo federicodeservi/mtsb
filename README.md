@@ -55,11 +55,22 @@ import mtsb
 mtsb.sentiment()
 ```
 
+* sentiment_perc()
+
+Performs sentiment analysis on collected tweets using Google's API or Textblob and returns a the percentage of positive tweets.
+
+```
+import mtsb
+
+mtsb.sentiment_perc()
+```
+
 * sentiment_boxoffice_all()
 
 Creates a dataframe with the following info for each movie:
-    * Movie title
-    * Weighted geometric average of score and magnitude (from sentiment() )
+    * Movie title and genres
+    * Average mean of the tweets' scores
+    * Percentage of positive and negative labelled tweets (if score==0 is labelled as positive)
     * Gross boxoffice for the week after the movie release
 
 ```
@@ -86,6 +97,8 @@ Useful python libraries used:
 * [imdbpy library](https://github.com/alberanid/imdbpy/ "imdbpy library title")
 * [ntlk library](https://github.com/nltk/nltk "ntlk library title")
 * [beautifulSoup library](https://pypi.org/project/beautifulsoup4/ "beautifulSoup library title")
+* [Textblob library](https://github.com/sloria/TextBlob "Textblob library title")
+* [Google-cloud library](https://github.com/googleapis/google-cloud-python "Google-cloud library title")
 
 ## Licence
 
