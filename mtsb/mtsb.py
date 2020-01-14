@@ -360,31 +360,31 @@ def get_email():
 
 def send_email_finish(email):
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    server.login("errorfound201981@gmail.com", "DataMan2019!")
+    server.login("mtsbcomplete@gmail.com", "DataMan2019!")
     m = text("The tweet collector have finished,\nNow you can check on Mongodb typing: \nlocalhost:8081 on your local browser.")
     m['Subject'] = '***TWEET COLLECTION FINISHED***'
-    m['From'] = "errorfound201981@gmail.com"
+    m['From'] = "mtsbcomplete@gmail.com"
     m['To'] = email
     server.sendmail(
-        "errorfound201981@gmail.com",
+        "mtsbcomplete@gmail.com",
         email,
         m.as_string())
     server.quit()
 
 def starter(timeout, keys, mytopic, query, email):
-        stop_process = False
-        streamf = multiprocessing.Process(target = stream, args =(lambda : stop_threads, keys, mytopic, query))
-        streamf.daemon = True
-        streamf.start()
-        time.sleep(timeout)
-        stop_process = True
-        streamf.terminate()
-        if email!=0:
-            send_email_finish(email)
-        streamf.join()
-        print('Process killed')
-        print("Is stream alive?")
-        print(streamf.is_alive())
+    stop_process = False
+    streamf = multiprocessing.Process(target = stream, args =(lambda : stop_threads, keys, mytopic, query))
+    streamf.daemon = True
+    streamf.start()
+    time.sleep(timeout)
+    stop_process = True
+    streamf.terminate()
+    if email!=0:
+        send_email_finish(email)
+    streamf.join()
+    print('Process killed')
+    print("Is stream alive?")
+    print(streamf.is_alive())
 
 def get_database_coll():
     #Variable with client info
@@ -715,20 +715,33 @@ def sentiment():
 
 def sentiment_boxoffice_all():
     boxoffice_sentiment_all = pd.DataFrame()
+    ia = imdb.IMDb()
+    i = imdb.IMDb('http')
     exit = 0
     while exit!=1:
         selected_movie = movie_title()
         selected_movie_title = selected_movie.iloc[0]["title"]
         selected_movie_year = int(selected_movie.iloc[0]["release"].strftime("%Y"))
         selected_movie_week = int(selected_movie.iloc[0]["release"].strftime("%W"))+1
+        #Now we use imdbpy to get data about the movie genres
+        print("Please wait...")
+        #Get info like: movie title, genres
+        title = selected_movie_title
+        movies = ia.search_movie(title)
+        movies_id = movies[0].movieID
+        movie = i.get_movie(movies_id)
+        genres = movie['genres']
         try:
             boxoffice_sentiment_data = box_office(selected_movie_title, selected_movie_year, selected_movie_week)
             boxoffice_sentiment_data = boxoffice_sentiment_data[["Release", "Gross"]]
+            boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace(',', '')
+            boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace('$', '')
+            boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].astype(int)
+            boxoffice_sentiment_data.at[0,"genres"] = [', '.join(genres)][0]
             boxoffice_sentiment_data["sentiment_avg"] = sentiment()
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
         except TypeError:
             print("No data found.")
-        display(boxoffice_sentiment_all)
         print("Do you want to add more movies?")
         while True:
             yes_no = input('[y/n]: ')
