@@ -6,7 +6,6 @@ from urllib.request import urlopen as uReq  # Web client
 import pandas as pd
 import numpy as np
 import imdb
-import pandas as pd
 from datetime import datetime
 from lxml import etree
 import multiprocessing
