@@ -715,16 +715,34 @@ def sentiment():
 
 def sentiment_boxoffice_all():
     boxoffice_sentiment_all = pd.DataFrame()
+    ia = imdb.IMDb()
+    i = imdb.IMDb('http')
     exit = 0
     while exit!=1:
         selected_movie = movie_title()
         selected_movie_title = selected_movie.iloc[0]["title"]
         selected_movie_year = int(selected_movie.iloc[0]["release"].strftime("%Y"))
         selected_movie_week = int(selected_movie.iloc[0]["release"].strftime("%W"))+1
+        print(selected_movie_title)
+        print(selected_movie_week)
+        print(selected_movie_year)
+        #Now we use imdbpy to get data about the movie genres
+        print("Please wait...")
+        #Get info like: movie title, genres
+        title = selected_movie_title
+        movies = ia.search_movie(title)
+        movies_id = movies[0].movieID
+        movie = i.get_movie(movies_id)
+        print(movie)
+        genres = movie['genres']
+        print(genres)
         try:
             boxoffice_sentiment_data = box_office(selected_movie_title, selected_movie_year, selected_movie_week)
             boxoffice_sentiment_data = boxoffice_sentiment_data[["Release", "Gross"]]
-            boxoffice_sentiment_data["sentiment_avg"] = sentiment()
+            display(boxoffice_sentiment_data)
+            boxoffice_sentiment_data.at[0,"genres"] = [', '.join(genres)][0]
+            display(boxoffice_sentiment_data)
+            #boxoffice_sentiment_data["sentiment_avg"] = sentiment()
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
         except TypeError:
             print("No data found.")
