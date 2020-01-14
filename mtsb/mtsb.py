@@ -99,8 +99,9 @@ def movie_title():
             while True:
                 try:
                     movie_index_start = int(input('Enter index of start date:  '))
+                    break
                 except ValueError:
-                    print("Cannot enter null value.")
+                    print("Cannot enter null or string value.")
             if movie_index_start > len(movie_dates)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -128,9 +129,10 @@ def movie_title():
         while True:
             while True:
                 try:
-                    movie_index_end = int(input('Enter index of end date:  '))
+                    movie_index_end = int(input('Enter index of end date: ') 
+                    break
                 except ValueError:
-                    print("Cannot enter null value.")
+                    print("Cannot enter null or string value.")
             if movie_index_end > len(movie_dates)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -183,8 +185,9 @@ def movie_title():
             while True:
                 try:
                     movie_index = int(input('Select the movie of your interest. Enter index of desired movie:  '))
+                    break
                 except ValueError:
-                    print("Cannot enter null value.")
+                    print("Cannot enter null or string value.")
             if movie_index > len(movie_titles)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -410,8 +413,9 @@ def get_database_coll():
             while True:
                 try:
                     db_index = int(input('Select the database of your interest. Enter index of desired db:  '))
+                    break
                 except ValueError:
-                    print("Cannot enter null value.")
+                    print("Cannot enter null or string value.")
             if db_index > len(db_names)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -443,8 +447,9 @@ def get_database_coll():
             while True:
                 try:
                     coll_index = int(input('Select the collection of your interest. Enter index of desired collection:  '))
+                    break
                 except ValueError:
-                    print("Cannot enter null value.")
+                    print("Cannot enter null or string value.")
             if coll_index > len(coll_names)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -601,8 +606,9 @@ def google_analyze_tweet(array):
                         while True:
                             try:
                                 num_tweet = int(input('\nHow many tweet you wanna analyze?\n'))
+                                break
                             except ValueError:
-                                print("Cannot enter null value.")
+                                print("Cannot enter null or string value.")
                         if num_tweet < 0:
                             print("Sorry, you selected a negative number of tweets.")
                             continue
