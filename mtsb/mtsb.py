@@ -372,19 +372,19 @@ def send_email_finish(email):
     server.quit()
 
 def starter(timeout, keys, mytopic, query, email):
-        stop_process = False
-        streamf = multiprocessing.Process(target = stream, args =(lambda : stop_threads, keys, mytopic, query))
-        streamf.daemon = True
-        streamf.start()
-        time.sleep(timeout)
-        stop_process = True
-        streamf.terminate()
-        if email!=0:
-            send_email_finish(email)
-        streamf.join()
-        print('Process killed')
-        print("Is stream alive?")
-        print(streamf.is_alive())
+    stop_process = False
+    streamf = multiprocessing.Process(target = stream, args =(lambda : stop_threads, keys, mytopic, query))
+    streamf.daemon = True
+    streamf.start()
+    time.sleep(timeout)
+    stop_process = True
+    streamf.terminate()
+    if email!=0:
+        send_email_finish(email)
+    streamf.join()
+    print('Process killed')
+    print("Is stream alive?")
+    print(streamf.is_alive())
 
 def get_database_coll():
     #Variable with client info
