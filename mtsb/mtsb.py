@@ -712,6 +712,18 @@ def sentiment():
         mean_sentiment = sentiment_df.score_Google.mean()
     return mean_sentiment
 
+def sentiment_perc():
+    #Asks the user which sentiment service wants to use
+    sentiment_type = which_sentiment()
+    #Returns the weighted geometric mean of the score*magnitude for the selected collection
+    tweet_df = get_database_coll()
+    tweets_array = clean_tweet_auto(tweet_df)
+    if sentiment_type == "textblob":
+        sentiment_df = sentiment_textblob(tweets_array)
+    else:
+        sentiment_df = google_analyze_tweet(tweets_array)
+    mean_sentiment_perc = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)   
+    return mean_sentiment_perc
 
 def sentiment_boxoffice_all():
     boxoffice_sentiment_all = pd.DataFrame()
@@ -738,7 +750,9 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace('$', '')
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].astype(int)
             boxoffice_sentiment_data.at[0,"genres"] = [', '.join(genres)][0]
-            boxoffice_sentiment_data["sentiment_avg"] = sentiment()
+            boxoffice_sentiment_data["sentiment_Avg"] = sentiment()
+            boxoffice_sentiment_data["sentiment_Perc_positiva"] = sentiment_perc()
+            boxoffice_sentiment_data["sentiment_Perc_negativa"] = 1 - boxoffice_sentiment_data["sentiment_Perc_positiva"]                      
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
         except TypeError:
             print("No data found.")
