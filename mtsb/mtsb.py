@@ -97,7 +97,11 @@ def movie_title():
     exit = 0
     while exit != 1:
         while True:
-            movie_index_start = int(input('Enter index of start date:  '))
+            while True:
+                try:
+                    movie_index_start = int(input('Enter index of start date:  '))
+                except ValueError:
+                    print("Cannot enter null value.")
             if movie_index_start > len(movie_dates)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -123,7 +127,11 @@ def movie_title():
     exit = 0
     while exit != 1:
         while True:
-            movie_index_end = int(input('Enter index of end date:  '))
+            while True:
+                try:
+                    movie_index_end = int(input('Enter index of end date:  '))
+                except ValueError:
+                    print("Cannot enter null value.")
             if movie_index_end > len(movie_dates)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -173,7 +181,11 @@ def movie_title():
     exit = 0
     while exit != 1:
         while True:
-            movie_index = int(input('Select the movie of your interest. Enter index of desired movie:  '))
+            while True:
+                try:
+                    movie_index = int(input('Select the movie of your interest. Enter index of desired movie:  '))
+                except ValueError:
+                    print("Cannot enter null value.")
             if movie_index > len(movie_titles)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -396,7 +408,11 @@ def get_database_coll():
     exit = 0
     while exit != 1:
         while True:
-            db_index = int(input('Select the database of your interest. Enter index of desired db:  '))
+            while True:
+                try:
+                    db_index = int(input('Select the database of your interest. Enter index of desired db:  '))
+                except ValueError:
+                    print("Cannot enter null value.")
             if db_index > len(db_names)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -425,7 +441,11 @@ def get_database_coll():
     exit = 0
     while exit != 1:
         while True:
-            coll_index = int(input('Select the collection of your interest. Enter index of desired collection:  '))
+            while True:
+                try:
+                    coll_index = int(input('Select the collection of your interest. Enter index of desired collection:  '))
+                except ValueError:
+                    print("Cannot enter null value.")
             if coll_index > len(coll_names)-1:
                 print("Sorry, you selected an index out of range.")
                 continue
@@ -579,7 +599,11 @@ def google_analyze_tweet(array):
                 exit = 0
                 while exit != 1:
                     while True:
-                        num_tweet = int(input('\nHow many tweet you wanna analyze?\n'))
+                        while True:
+                            try:
+                                num_tweet = int(input('\nHow many tweet you wanna analyze?\n'))
+                            except ValueError:
+                                print("Cannot enter null value.")
                         if num_tweet < 0:
                             print("Sorry, you selected a negative number of tweets.")
                             continue
@@ -715,14 +739,14 @@ def sentiment():
 def sentiment_perc():
     #Asks the user which sentiment service wants to use
     sentiment_type = which_sentiment()
-    #Returns the weighted geometric mean of the score*magnitude for the selected collection
+    #Returns the percent of positive tweets over all tweets
     tweet_df = get_database_coll()
     tweets_array = clean_tweet_auto(tweet_df)
     if sentiment_type == "textblob":
         sentiment_df = sentiment_textblob(tweets_array)
     else:
         sentiment_df = google_analyze_tweet(tweets_array)
-    mean_sentiment_perc = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)   
+    mean_sentiment_perc = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
     return mean_sentiment_perc
 
 def sentiment_boxoffice_all():
@@ -752,7 +776,7 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data.at[0,"genres"] = [', '.join(genres)][0]
             boxoffice_sentiment_data["sentiment_Avg"] = sentiment()
             boxoffice_sentiment_data["sentiment_Perc_positiva"] = sentiment_perc()
-            boxoffice_sentiment_data["sentiment_Perc_negativa"] = 1 - boxoffice_sentiment_data["sentiment_Perc_positiva"]                      
+            boxoffice_sentiment_data["sentiment_Perc_negativa"] = 1 - boxoffice_sentiment_data["sentiment_Perc_positiva"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
         except TypeError:
             print("No data found.")
