@@ -129,7 +129,7 @@ def movie_title():
         while True:
             while True:
                 try:
-                    movie_index_end = int(input('Enter index of end date: ') 
+                    movie_index_end = int(input('Enter index of end date: '))
                     break
                 except ValueError:
                     print("Cannot enter null or string value.")
