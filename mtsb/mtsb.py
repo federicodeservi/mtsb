@@ -6,6 +6,7 @@ from urllib.request import urlopen as uReq  # Web client
 import pandas as pd
 import numpy as np
 import imdb
+from textblob import TextBlob
 from datetime import datetime
 from lxml import etree
 import multiprocessing
@@ -575,8 +576,42 @@ def which_sentiment():
     return sentiment_type
 
 def sentiment_textblob(array):
-        text = TextBlob(array)
-        return [text.sentiment.polarity, text.sentiment.subjectivity]
+    df_result=pd.DataFrame()
+    exit = 0
+    while exit != 1:
+        while True:
+            while True:
+                try:
+                    num_tweet = int(input('\nHow many tweet you wanna analyze?\n'))
+                    break
+                except ValueError:
+                    print("Cannot enter null or string value.")
+            if num_tweet < 0:
+                print("Sorry, you selected a negative number of tweets.")
+                continue
+            elif num_tweet > len(array):
+                print("Sorry, you only have "+len(array)+" in your collection.")
+            else:
+                 break
+        while True:
+            print('\nDo you want do a random sampling?')
+            yes_no = input('[y/n]: ')
+            if yes_no in ("y", "n"):
+                if (yes_no == "y"):
+                    array=random.choices(array, k=num_tweet)
+                    break
+                else:
+                    print("Ok. No random sampling.")
+                    break
+            else:
+                print("Sorry, you did not enter y or n.")
+                continue
+        exit = 1
+    for i in range(len(array)): 
+        text = TextBlob(array[i])
+        df_result = df_result.append({'score': text.sentiment.polarity, 'magnitude' : text.sentiment.subjectivity}, ignore_index=True)
+    
+    return df_result
 
 def google_analyze_tweet(array):
     print('There are',len(array),'tweets in your database\n')
@@ -733,26 +768,16 @@ def sentiment():
     #Returns the weighted geometric mean of the score*magnitude for the selected collection
     tweet_df = get_database_coll()
     tweets_array = clean_tweet_auto(tweet_df)
+    
     if sentiment_type == "textblob":
         sentiment_df = sentiment_textblob(tweets_array)
-        mean_sentiment = sentiment_df.score_TextBlob.mean()
+        mean_sentiment = sentiment_df.score.mean()
+        mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
     else:
         sentiment_df = google_analyze_tweet(tweets_array)
-        mean_sentiment = sentiment_df.score_Google.mean()
-    return mean_sentiment
-
-def sentiment_perc():
-    #Asks the user which sentiment service wants to use
-    sentiment_type = which_sentiment()
-    #Returns the percent of positive tweets over all tweets
-    tweet_df = get_database_coll()
-    tweets_array = clean_tweet_auto(tweet_df)
-    if sentiment_type == "textblob":
-        sentiment_df = sentiment_textblob(tweets_array)
-    else:
-        sentiment_df = google_analyze_tweet(tweets_array)
-    mean_sentiment_perc = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
-    return mean_sentiment_perc
+        mean_sentiment = sentiment_df.score.mean()
+        mean_sentiment_perc = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
+    return mean_sentiment, mean_sentiment_perc_pos
 
 def sentiment_boxoffice_all():
     boxoffice_sentiment_all = pd.DataFrame()
@@ -779,8 +804,7 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace('$', '')
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].astype(int)
             boxoffice_sentiment_data.at[0,"genres"] = [', '.join(genres)][0]
-            boxoffice_sentiment_data["sentiment_Avg"] = sentiment()
-            boxoffice_sentiment_data["sentiment_Perc_positiva"] = sentiment_perc()
+            boxoffice_sentiment_data["sentiment_Avg"],boxoffice_sentiment_data["sentiment_Perc_positiva"]= sentiment()
             boxoffice_sentiment_data["sentiment_Perc_negativa"] = 1 - boxoffice_sentiment_data["sentiment_Perc_positiva"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
         except TypeError:
