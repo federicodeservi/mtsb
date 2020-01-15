@@ -607,10 +607,10 @@ def sentiment_textblob(array):
                 print("Sorry, you did not enter y or n.")
                 continue
         exit = 1
-    for i in range(len(array)): 
+    for i in range(len(array)):
         text = TextBlob(array[i])
         df_result = df_result.append({'score': text.sentiment.polarity, 'magnitude' : text.sentiment.subjectivity}, ignore_index=True)
-    
+
     return df_result
 
 def google_analyze_tweet(array):
@@ -768,16 +768,18 @@ def sentiment():
     #Returns the weighted geometric mean of the score*magnitude for the selected collection
     tweet_df = get_database_coll()
     tweets_array = clean_tweet_auto(tweet_df)
-    
+
     if sentiment_type == "textblob":
         sentiment_df = sentiment_textblob(tweets_array)
+        mean_magnitude = sentiment_df.magnitude.mean()
         mean_sentiment = sentiment_df.score.mean()
         mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
     else:
         sentiment_df = google_analyze_tweet(tweets_array)
+        mean_magnitude = sentiment_df.magnitude.mean()
         mean_sentiment = sentiment_df.score.mean()
         mean_sentiment_perc = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
-    return mean_sentiment, mean_sentiment_perc_pos
+    return mean_sentiment, mean_sentiment_perc_pos, mean_magnitude
 
 def sentiment_boxoffice_all():
     boxoffice_sentiment_all = pd.DataFrame()
@@ -804,7 +806,7 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace('$', '')
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].astype(int)
             boxoffice_sentiment_data.at[0,"genres"] = [', '.join(genres)][0]
-            boxoffice_sentiment_data["sentiment_Avg"],boxoffice_sentiment_data["sentiment_Perc_positiva"]= sentiment()
+            boxoffice_sentiment_data["sentiment_Avg"],boxoffice_sentiment_data["sentiment_Perc_positiva"], box_office_sentiment_data["magnitude_Avg"]= sentiment()
             boxoffice_sentiment_data["sentiment_Perc_negativa"] = 1 - boxoffice_sentiment_data["sentiment_Perc_positiva"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
         except TypeError:
