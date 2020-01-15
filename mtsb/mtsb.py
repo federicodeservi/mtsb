@@ -769,11 +769,15 @@ def sentiment():
     tweets_array = clean_tweet_auto(tweet_df)
     if sentiment_type == "textblob":
         sentiment_df = sentiment_textblob(tweets_array)
+        mean_magnitude = sentiment_df.magnitude.mean()
+        mean_sentiment = sentiment_df.score.mean()
+        mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
     else:
         sentiment_df = google_analyze_tweet(tweets_array)
     mean_magnitude = sentiment_df.magnitude.mean()
     mean_sentiment = sentiment_df.score.mean()
-    mean_sentiment_perc = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
+    mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
+
     return mean_sentiment, mean_magnitude, mean_sentiment_perc_pos
 
 def sentiment_boxoffice_all():
@@ -801,7 +805,7 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace('$', '')
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].astype(int)
             boxoffice_sentiment_data.at[0,"Genres"] = [', '.join(genres)][0]
-            boxoffice_sentiment_data["sentiment_Avg"], box_office_sentiment_data["magnitude_Avg"],boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
+            boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
             boxoffice_sentiment_data["sentiment_neg_percentage"] = 1 - boxoffice_sentiment_data["sentiment_pos_percentage"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
         except TypeError:
