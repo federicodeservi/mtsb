@@ -36,7 +36,7 @@ from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
 from google.oauth2 import service_account
-
+pd.options.mode.chained_assignment = None
 #! YOU NEED ALSO HTMLIB5 INSTALLED, NOT NEED TO IMPORT IT
 
 #!! YOU NEED TO HAVE COMPLETED NTLK INSTALLATION, INCLUDING "ntlk-download()"
