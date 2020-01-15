@@ -6,7 +6,7 @@ MTSB (Movie Tweet Sentiment Boxoffice) is a python module that collects tweets a
 
 * Collect tweets about movies
 * Creates hashtags for each movie
-* Performs sentiment analysis on those tweets using Google's API or Textblob and returns a mean score
+* Performs sentiment analysis on those tweets using Google's API or Textblob and returns the average score and the average magnitude
 * Gets boxoffice data from boxofficemojo
 * Performs correlation between the sentiment analysis and boxoffice data
 
@@ -47,7 +47,7 @@ mtsb.tweet_collector()
 
 * sentiment()
 
-Performs sentiment analysis on collected tweets using Google's API or Textblob and returns a weighted geometric average of score and magnitude.
+Performs sentiment analysis on collected tweets using Google's API or Textblob and returns the average score and the average magnitude.
 
 ```
 import mtsb
@@ -69,7 +69,7 @@ mtsb.sentiment_perc()
 
 Creates a dataframe with the following info for each movie:
     * Movie title and genres
-    * Average mean of the tweets' scores
+    * Average mean of the tweets' scores and magnitudes
     * Percentage of positive and negative labelled tweets (if score==0 is labelled as positive)
     * Gross boxoffice for the week after the movie release
 
