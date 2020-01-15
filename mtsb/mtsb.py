@@ -613,7 +613,7 @@ def sentiment_textblob(array):
     return df_result
 
 def google_analyze_tweet(array):
-    print('There are',len(array),'tweets in your database\n')
+    print('\nThere are',len(array),'tweets in your database\n')
     df_result = pd.DataFrame()
     print('***IMPORTANT***\n')
     print('You need copy and paste your google credentials.json in my-data folder before continuing!\n')
