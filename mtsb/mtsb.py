@@ -179,7 +179,7 @@ def movie_title():
         movie_titles_list.append([title])
     movie_titles = pd.DataFrame(movie_titles_list, columns=["title"])
     #Select one movie
-    print(movie_titles)
+    display(movie_titles)
     exit = 0
     while exit != 1:
         while True:
