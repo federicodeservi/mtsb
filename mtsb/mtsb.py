@@ -800,9 +800,9 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace(',', '')
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace('$', '')
             boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].astype(int)
-            boxoffice_sentiment_data.at[0,"genres"] = [', '.join(genres)][0]
-            boxoffice_sentiment_data["sentiment_Avg"], box_office_sentiment_data["magnitude_Avg"],boxoffice_sentiment_data["sentiment_Perc_positiva"]= sentiment()
-            boxoffice_sentiment_data["sentiment_Perc_negativa"] = 1 - boxoffice_sentiment_data["sentiment_Perc_positiva"]
+            boxoffice_sentiment_data.at[0,"Genres"] = [', '.join(genres)][0]
+            boxoffice_sentiment_data["sentiment_Avg"], box_office_sentiment_data["magnitude_Avg"],boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
+            boxoffice_sentiment_data["sentiment_neg_percentage"] = 1 - boxoffice_sentiment_data["sentiment_pos_percentage"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
         except TypeError:
             print("No data found.")
