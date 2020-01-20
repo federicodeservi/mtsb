@@ -695,7 +695,7 @@ def box_office(selected_movie_title, selected_movie_date):
         try:
             delta_day = 2
             selected_boxoff = 0
-            while delta_day < 9: 
+            while delta_day < 9:
                 boxoff_daily = pd.read_html("https://www.boxofficemojo.com/date/"+(selected_movie_date+timedelta(days=delta_day)).strftime('%Y-%m-%d'))[0]
                 boxoff_daily = boxoff_daily[["Release", "Daily"]]
                 for index, row in boxoff_daily.iterrows():
@@ -796,7 +796,7 @@ def sentiment_boxoffice_all():
         try:
             boxoffice_sentiment_data = box_office(selected_movie_title, selected_movie_date)
             boxoffice_sentiment_data = boxoffice_sentiment_data[["Release", "Gross"]]
-            boxoffice_sentiment_data["Genres"] = selected_movie["genres][0]
+            boxoffice_sentiment_data["Genres"] = selected_movie["genres"][0]
             boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
             boxoffice_sentiment_data["sentiment_neg_percentage"] = 1 - boxoffice_sentiment_data["sentiment_pos_percentage"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
