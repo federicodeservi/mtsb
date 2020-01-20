@@ -8,6 +8,7 @@ import numpy as np
 import imdb
 from textblob import TextBlob
 from datetime import datetime
+from datetime import timedelta
 from lxml import etree
 import multiprocessing
 import tweepy
@@ -681,30 +682,34 @@ def google_analyze_tweet(array):
     return df_result
 
 
-def box_office(selected_movie_title, selected_movie_year, selected_movie_week):
+def box_office(selected_movie_title, selected_movie_date):
     print("Please wait...")
     #Creates empty list
-    movies_df = []
-    #Scrape data from boxofficemojo and adds column "release_date_first" (first day of release) and "release_date_last"
-    try:
-        if selected_movie_week < 10:
-            movie_df = pd.read_html("https://www.boxofficemojo.com/weekly/"+str(selected_movie_year)+"W"+"0"+str(selected_movie_week))
-            movie_df[0]["box_off_year"] =  selected_movie_year
-            movie_df[0]["box_off_week"] =  selected_movie_week
-            movies_df.append(movie_df[0])
-        else:
-            movie_df = pd.read_html("https://www.boxofficemojo.com/weekly/"+str(selected_movie_year)+"W"+str(selected_movie_week))
-            movie_df[0]["box_off_year"] =  selected_movie_year
-            movie_df[0]["box_off_week"] =  selected_movie_week
-            movies_df.append(movie_df[0])
-            #Concat all dfs in one final df
-        box_office = pd.concat(movies_df)
-        box_office = box_office[["Release", "Gross", "Average", "Total Gross", "Weeks", "New This Week", "Estimated"]]
-        for index, row in box_office.iterrows():
-            box_office.at[index, "titlematch"] = SequenceMatcher(None, selected_movie_title, box_office.iloc[index]["Release"]).ratio()
-        return box_office[box_office["titlematch"] == box_office["titlematch"].max()]
-    except ValueError:
-        print("No data found on boxofficemojo.com. You might have selected a date in the future.")
+    boxoff_week = pd.DataFrame(columns = ['Title', 'Gross'])
+    #Checks if 8 days has passed from the release
+    current_day = pd.to_datetime(datetime.now().date())
+    if (current_day - selected_movie_date).days < 8:
+        print("Sorry. Not enough days has passed to aggregate 7 days data.")
+    else:
+        #Scrape data from boxofficemojo for the 7 days after the tweets collection
+        try:
+            delta_day = 2
+            selected_boxoff = 0
+            while delta_day < 9: 
+                boxoff_daily = pd.read_html("https://www.boxofficemojo.com/date/"+(selected_movie_date+timedelta(days=delta_day)).strftime('%Y-%m-%d'))[0]
+                boxoff_daily = boxoff_daily[["Release", "Daily"]]
+                for index, row in boxoff_daily.iterrows():
+                    boxoff_daily.at[index, "titlematch"] = SequenceMatcher(None, selected_movie_title, boxoff_daily.iloc[index]["Release"]).ratio()
+                boxoff_daily['Daily'] = boxoff_daily['Daily'].str.replace(',', '')
+                boxoff_daily['Daily'] = boxoff_daily['Daily'].str.replace('$', '')
+                boxoff_daily['Daily'] = boxoff_daily['Daily'].astype(int)
+                selected_boxoff += boxoff_daily[boxoff_daily["titlematch"] == boxoff_daily["titlematch"].max()]["Daily"]
+                delta_day+=1
+            boxoff_week.at[0,"Title"] = selected_movie_title
+            boxoff_week["Gross"] = selected_boxoff
+            return boxoff_week
+        except ValueError:
+            print("No data found on boxofficemojo.com.")
 
 
 #____________________________________________________________________________________________________________________
@@ -782,29 +787,16 @@ def sentiment():
 
 def sentiment_boxoffice_all():
     boxoffice_sentiment_all = pd.DataFrame()
-    ia = imdb.IMDb()
-    i = imdb.IMDb('http')
     exit = 0
     while exit!=1:
         selected_movie = movie_title()
         selected_movie_title = selected_movie.iloc[0]["title"]
-        selected_movie_year = int(selected_movie.iloc[0]["release"].strftime("%Y"))
-        selected_movie_week = int(selected_movie.iloc[0]["release"].strftime("%W"))+1
-        #Now we use imdbpy to get data about the movie genres
+        selected_movie_date = selected_movie.iloc[0]["release"]
         print("Please wait...")
-        #Get info like: movie title, genres
-        title = selected_movie_title
-        movies = ia.search_movie(title)
-        movies_id = movies[0].movieID
-        movie = i.get_movie(movies_id)
-        genres = movie['genres']
         try:
-            boxoffice_sentiment_data = box_office(selected_movie_title, selected_movie_year, selected_movie_week)
+            boxoffice_sentiment_data = box_office(selected_movie_title, selected_movie_date)
             boxoffice_sentiment_data = boxoffice_sentiment_data[["Release", "Gross"]]
-            boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace(',', '')
-            boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].str.replace('$', '')
-            boxoffice_sentiment_data['Gross'] = boxoffice_sentiment_data['Gross'].astype(int)
-            boxoffice_sentiment_data["Genres"] = [', '.join(genres)][0]
+            boxoffice_sentiment_data["Genres"] = selected_movie["genres][0]
             boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
             boxoffice_sentiment_data["sentiment_neg_percentage"] = 1 - boxoffice_sentiment_data["sentiment_pos_percentage"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
