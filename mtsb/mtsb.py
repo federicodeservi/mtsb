@@ -706,10 +706,10 @@ def box_office(selected_movie_title, selected_movie_date):
                 boxoff_daily['Daily'] = boxoff_daily['Daily'].str.replace(',', '')
                 boxoff_daily['Daily'] = boxoff_daily['Daily'].str.replace('$', '')
                 boxoff_daily['Daily'] = boxoff_daily['Daily'].astype(int)
-                selected_boxoff += boxoff_daily[boxoff_daily["titlematch"] == boxoff_daily["titlematch"].max()]["Daily"]
+                selected_boxoff += boxoff_daily.loc[boxoff_daily["titlematch"] == boxoff_daily["titlematch"].max(),"Daily"].values[0]
                 delta_day+=1
             boxoff_week.at[0,"Release"] = selected_movie_title
-            boxoff_week["Gross"] = selected_boxoff
+            boxoff_week.at[0,"Gross"] = selected_boxoff
             return boxoff_week
         except ValueError:
             print("No data found on boxofficemojo.com.")
@@ -802,7 +802,7 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data["Genres"] = selected_movie.iloc[0]["genres"]
             boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
             boxoffice_sentiment_data["sentiment_neg_percentage"] = 1 - boxoffice_sentiment_data["sentiment_pos_percentage"]
-            boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
+            boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data, ignore_index=True)
         except TypeError:
             print("No data found.")
         print("Do you want to add more movies?")
