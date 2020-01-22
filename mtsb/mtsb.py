@@ -796,7 +796,7 @@ def sentiment_boxoffice_all():
         try:
             boxoffice_sentiment_data = box_office(selected_movie_title, selected_movie_date)
             boxoffice_sentiment_data = boxoffice_sentiment_data[["Release", "Gross"]]
-            boxoffice_sentiment_data["Genres"] = selected_movie["genres"][0]
+            boxoffice_sentiment_data["Genres"] = selected_movie.iloc[0]["genres"]
             boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
             boxoffice_sentiment_data["sentiment_neg_percentage"] = 1 - boxoffice_sentiment_data["sentiment_pos_percentage"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data)
