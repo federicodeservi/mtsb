@@ -577,6 +577,7 @@ def which_sentiment():
     return sentiment_type
 
 def sentiment_textblob(array):
+    print('\nThere are',len(array),'tweets in your database\n')
     df_result=pd.DataFrame()
     exit = 0
     while exit != 1:
