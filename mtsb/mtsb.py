@@ -685,7 +685,7 @@ def google_analyze_tweet(array):
 def box_office(selected_movie_title, selected_movie_date):
     print("Please wait...")
     #Creates empty list
-    boxoff_week = pd.DataFrame(columns = ['Title', 'Gross'])
+    boxoff_week = pd.DataFrame(columns = ['Release', 'Gross'])
     #Checks if 8 days has passed from the release
     current_day = pd.to_datetime(datetime.now().date())
     if (current_day - selected_movie_date).days < 8:
@@ -705,7 +705,7 @@ def box_office(selected_movie_title, selected_movie_date):
                 boxoff_daily['Daily'] = boxoff_daily['Daily'].astype(int)
                 selected_boxoff += boxoff_daily[boxoff_daily["titlematch"] == boxoff_daily["titlematch"].max()]["Daily"]
                 delta_day+=1
-            boxoff_week.at[0,"Title"] = selected_movie_title
+            boxoff_week.at[0,"Release"] = selected_movie_title
             boxoff_week["Gross"] = selected_boxoff
             return boxoff_week
         except ValueError:
