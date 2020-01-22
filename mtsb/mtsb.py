@@ -682,6 +682,9 @@ def google_analyze_tweet(array):
             continue
     return df_result
 
+#Matcher to find the correct movie title
+def matcher (df, title):
+    return SequenceMatcher(None, title, df["Release"]).ratio()
 
 def box_office(selected_movie_title, selected_movie_date):
     print("Please wait...")
@@ -699,8 +702,7 @@ def box_office(selected_movie_title, selected_movie_date):
             while delta_day < 9:
                 boxoff_daily = pd.read_html("https://www.boxofficemojo.com/date/"+(selected_movie_date+timedelta(days=delta_day)).strftime('%Y-%m-%d'))[0]
                 boxoff_daily = boxoff_daily[["Release", "Daily"]]
-                for index, row in boxoff_daily.iterrows():
-                    boxoff_daily.at[index, "titlematch"] = SequenceMatcher(None, selected_movie_title, boxoff_daily.iloc[index]["Release"]).ratio()
+                boxoff_daily["titlematch"] = boxoff_daily.apply(matcher, args=[selected_movie_title], axis=1)
                 boxoff_daily['Daily'] = boxoff_daily['Daily'].str.replace(',', '')
                 boxoff_daily['Daily'] = boxoff_daily['Daily'].str.replace('$', '')
                 boxoff_daily['Daily'] = boxoff_daily['Daily'].astype(int)
