@@ -1,35 +1,42 @@
-from email.mime.text import MIMEText as text
-import smtplib
-import numpy as np
-from bs4 import BeautifulSoup as soup  # HTML data structure
-from urllib.request import urlopen as uReq  # Web client
+# Standard Library
 import pandas as pd
 import numpy as np
 import imdb
-from textblob import TextBlob
 from datetime import datetime
 from datetime import timedelta
-from lxml import etree
 import multiprocessing
-import tweepy
-from tweepy import OAuthHandler
-from kafka import KafkaProducer
-from kafka import KafkaConsumer
 import json
 import time
+import re
+import random
+import matplotlib.pyplot as plt
+# Email Library
+from email.mime.text import MIMEText as text
+import smtplib
+# Scraper Library
+from bs4 import BeautifulSoup as soup  # HTML data structure
+from urllib.request import urlopen as uReq  # Web client
+from lxml import etree
+# Twitter API Library
+import tweepy
+from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 from tweepy import Stream
-import re
-import matplotlib.pyplot as plt
-import random
+# Kafka Library
+from kafka import KafkaProducer
+from kafka import KafkaConsumer
+# Pymongo Library
 from pymongo import MongoClient
 from pprint import pprint
+# Pre-processing Library
 from difflib import SequenceMatcher
 import string
 import unicodedata
 import nltk
 import contractions
 import inflect
+# Sentiment Analysis Library
+from textblob import TextBlob
 from nltk import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import *
@@ -37,6 +44,7 @@ from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
 from google.oauth2 import service_account
+# No Warning 
 pd.options.mode.chained_assignment = None
 #! YOU NEED ALSO HTMLIB5 INSTALLED, NOT NEED TO IMPORT IT
 
