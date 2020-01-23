@@ -534,8 +534,10 @@ def clean_tweet_auto(dataframe):
     # pre processing,take only non-retweet
     df = dataframe.loc[~dataframe.is_RT == True]
     #Delete tweets that contains an http (usually ads)
-    df['indexes'] = df['text'].str.find('http')
-    df = df.loc[~df.indexes > -1]
+    new = df.text.str.split('https',n=1,expand=True)
+    df['text_clean'] = new[0]
+    df.drop(columns =["text"], inplace = True)
+    df = df.rename(columns={'text_clean' : 'text'})
     array_text = df.text.values
     array_text = remove_metadata(array_text,0)
     array_text = replace_contractions(array_text)
