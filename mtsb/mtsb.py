@@ -1,6 +1,5 @@
 from email.mime.text import MIMEText as text
 import smtplib
-import numpy as np
 from bs4 import BeautifulSoup as soup  # HTML data structure
 from urllib.request import urlopen as uReq  # Web client
 import pandas as pd
@@ -14,7 +13,6 @@ import multiprocessing
 import tweepy
 from tweepy import OAuthHandler
 from kafka import KafkaProducer
-from kafka import KafkaConsumer
 import json
 import time
 from tweepy.streaming import StreamListener
