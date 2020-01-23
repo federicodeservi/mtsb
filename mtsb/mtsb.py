@@ -533,7 +533,7 @@ def clean_tweet_auto(dataframe):
         return stemmed,lemmatized
     # pre processing,take only non-retweet
     df = dataframe.loc[~dataframe.is_RT == True]
-    #Delete tweets that contains an http (usually ads)
+    #Delete http part of the text (usually ads)
     new = df.text.str.split('https',n=1,expand=True)
     df['text_clean'] = new[0]
     df.drop(columns =["text"], inplace = True)
