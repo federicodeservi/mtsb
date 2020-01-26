@@ -1,33 +1,43 @@
-from email.mime.text import MIMEText as text
-import smtplib
-from bs4 import BeautifulSoup as soup  # HTML data structure
-from urllib.request import urlopen as uReq  # Web client
+# Standard Library
 import pandas as pd
+import statistics as st
 import numpy as np
 import imdb
-from textblob import TextBlob
 from datetime import datetime
 from datetime import timedelta
-from lxml import etree
 import multiprocessing
-import tweepy
-from tweepy import OAuthHandler
-from kafka import KafkaProducer
 import json
 import time
+import re
+import random
+import matplotlib.pyplot as plt
+# Email Library
+from email.mime.text import MIMEText as text
+import smtplib
+# Scraper Library
+from bs4 import BeautifulSoup as soup  # HTML data structure
+from urllib.request import urlopen as uReq  # Web client
+from lxml import etree
+# Twitter API Library
+import tweepy
+from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 from tweepy import Stream
-import re
-import matplotlib.pyplot as plt
-import random
+# Kafka Library
+from kafka import KafkaProducer
+from kafka import KafkaConsumer
+# Pymongo Library
 from pymongo import MongoClient
 from pprint import pprint
+# Pre-processing Library
 from difflib import SequenceMatcher
 import string
 import unicodedata
 import nltk
 import contractions
 import inflect
+# Sentiment Analysis Library
+from textblob import TextBlob
 from nltk import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import *
@@ -35,6 +45,7 @@ from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
 from google.oauth2 import service_account
+# No Warning
 pd.options.mode.chained_assignment = None
 #! YOU NEED ALSO HTMLIB5 INSTALLED, NOT NEED TO IMPORT IT
 
@@ -780,13 +791,17 @@ def sentiment():
         mean_magnitude = sentiment_df.magnitude.mean()
         mean_sentiment = sentiment_df.score.mean()
         mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
+        std_magnitude = round(statistics.stdev(sentiment_df.magnitude),4)
+        std_score = round(statistics.stdev(sentiment_df.score),4)
     else:
         sentiment_df = google_analyze_tweet(tweets_array)
-    mean_magnitude = sentiment_df.magnitude.mean()
-    mean_sentiment = sentiment_df.score.mean()
-    mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
+        mean_magnitude = sentiment_df.magnitude.mean()
+        mean_sentiment = sentiment_df.score.mean()
+        mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
+        std_magnitude = round(st.stdev(sentiment_df.magnitude),4)
+        std_score = round(st.stdev(sentiment_df.score),4)
 
-    return mean_sentiment, mean_magnitude, mean_sentiment_perc_pos
+    return mean_sentiment, mean_magnitude, mean_sentiment_perc_pos, std_score, std_magnitude
 
 def sentiment_boxoffice_all():
     boxoffice_sentiment_all = pd.DataFrame()
@@ -800,7 +815,7 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data = box_office(selected_movie_title, selected_movie_date)
             boxoffice_sentiment_data = boxoffice_sentiment_data[["Release", "Gross"]]
             boxoffice_sentiment_data["Genres"] = selected_movie.iloc[0]["genres"]
-            boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
+            boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"], boxoffice_sentiment_data["sentiment_std_score"], boxoffice_sentiment_data["sentiment_std_magnitude"] = sentiment()
             boxoffice_sentiment_data["sentiment_neg_percentage"] = 1 - boxoffice_sentiment_data["sentiment_pos_percentage"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data, ignore_index=True)
         except TypeError:
