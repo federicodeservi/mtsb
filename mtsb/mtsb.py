@@ -1,5 +1,6 @@
 # Standard Library
 import pandas as pd
+import statistics as st
 import numpy as np
 import imdb
 from datetime import datetime
@@ -44,7 +45,7 @@ from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
 from google.oauth2 import service_account
-# No Warning 
+# No Warning
 pd.options.mode.chained_assignment = None
 #! YOU NEED ALSO HTMLIB5 INSTALLED, NOT NEED TO IMPORT IT
 
@@ -788,13 +789,17 @@ def sentiment():
         mean_magnitude = sentiment_df.magnitude.mean()
         mean_sentiment = sentiment_df.score.mean()
         mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
+        std_magnitude = round(statistics.stdev(sentiment_df.magnitude),4)
+        std_score = round(statistics.stdev(sentiment_df.score),4)
     else:
         sentiment_df = google_analyze_tweet(tweets_array)
     mean_magnitude = sentiment_df.magnitude.mean()
     mean_sentiment = sentiment_df.score.mean()
     mean_sentiment_perc_pos = len(sentiment_df[sentiment_df.score >= 0])/len(sentiment_df)
+    std_magnitude = round(st.stdev(sentiment_df.magnitude),4)
+    std_score = round(st.stdev(sentiment_df.score),4)
 
-    return mean_sentiment, mean_magnitude, mean_sentiment_perc_pos
+    return mean_sentiment, mean_magnitude, mean_sentiment_perc_pos, std_score, std_magnitude
 
 def sentiment_boxoffice_all():
     boxoffice_sentiment_all = pd.DataFrame()
@@ -808,7 +813,7 @@ def sentiment_boxoffice_all():
             boxoffice_sentiment_data = box_office(selected_movie_title, selected_movie_date)
             boxoffice_sentiment_data = boxoffice_sentiment_data[["Release", "Gross"]]
             boxoffice_sentiment_data["Genres"] = selected_movie.iloc[0]["genres"]
-            boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"]= sentiment()
+            boxoffice_sentiment_data["sentiment_Avg"], boxoffice_sentiment_data["magnitude_Avg"], boxoffice_sentiment_data["sentiment_pos_percentage"], boxoffice_sentiment_data["sentiment_std_score"], boxoffice_sentiment_data["sentiment_std_magnitude"] = sentiment()
             boxoffice_sentiment_data["sentiment_neg_percentage"] = 1 - boxoffice_sentiment_data["sentiment_pos_percentage"]
             boxoffice_sentiment_all = boxoffice_sentiment_all.append(boxoffice_sentiment_data, ignore_index=True)
         except TypeError:
