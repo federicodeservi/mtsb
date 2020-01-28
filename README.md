@@ -47,7 +47,7 @@ mtsb.tweet_collector()
 
 * sentiment()
 
-Performs sentiment analysis on collected tweets using Google's API or Textblob and returns the average score and the average magnitude.
+Performs sentiment analysis on collected tweets using Google's API or Textblob and returns the average score, the average magnitude and their standard deviations.
 
 ```
 import mtsb
