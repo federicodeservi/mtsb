@@ -47,7 +47,7 @@ mtsb.tweet_collector()
 
 * sentiment()
 
-Performs sentiment analysis on collected tweets using Google's API or Textblob and returns the average score, the average magnitude and their standard deviations.
+Performs sentiment analysis on collected tweets using Google's API or Textblob and returns the average score, the average magnitude, their standard deviations and the percentage of positive tweets.
 
 ```
 import mtsb
@@ -55,21 +55,11 @@ import mtsb
 mtsb.sentiment()
 ```
 
-* sentiment_perc()
-
-Performs sentiment analysis on collected tweets using Google's API or Textblob and returns a the percentage of positive tweets.
-
-```
-import mtsb
-
-mtsb.sentiment_perc()
-```
-
 * sentiment_boxoffice_all()
 
 Creates a dataframe with the following info for each movie:
     * Movie title and genres
-    * Average mean of the tweets' scores and magnitudes
+    * Average mean and std of the tweets' scores and magnitudes
     * Percentage of positive and negative labelled tweets (if score==0 is labelled as positive)
     * Sum of the boxoffice of the 7 days after the movie release
 
